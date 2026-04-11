@@ -1,0 +1,547 @@
+{
+  "version": 1,
+  "appName": "KS 이미지 에디터",
+  "cvW": 893,
+  "cvH": 795,
+  "objects": [
+    {
+      "id": 1,
+      "type": "line",
+      "x1": 81,
+      "y1": 449,
+      "x2": 83,
+      "y2": 59,
+      "stroke": "#000000",
+      "sw": 2.37,
+      "dash": "none",
+      "arrow": "end",
+      "opacity": 1
+    },
+    {
+      "id": 2,
+      "type": "line",
+      "x1": 81,
+      "y1": 447,
+      "x2": 825,
+      "y2": 447,
+      "stroke": "#000000",
+      "sw": 2.37,
+      "dash": "none",
+      "arrow": "end",
+      "opacity": 1
+    },
+    {
+      "id": 3,
+      "type": "polyline",
+      "points": [
+        [
+          156,
+          381
+        ],
+        [
+          176,
+          367
+        ],
+        [
+          192,
+          355
+        ],
+        [
+          212,
+          349
+        ],
+        [
+          236,
+          331
+        ],
+        [
+          260,
+          327
+        ],
+        [
+          280,
+          316
+        ],
+        [
+          317,
+          310
+        ],
+        [
+          337,
+          310
+        ],
+        [
+          355,
+          314
+        ],
+        [
+          379,
+          323
+        ],
+        [
+          395,
+          328
+        ],
+        [
+          435,
+          336
+        ],
+        [
+          474,
+          338
+        ],
+        [
+          504,
+          339
+        ],
+        [
+          526,
+          328
+        ],
+        [
+          545,
+          315
+        ],
+        [
+          565,
+          298
+        ],
+        [
+          577,
+          283
+        ],
+        [
+          586,
+          271
+        ],
+        [
+          609,
+          245
+        ],
+        [
+          625,
+          228
+        ],
+        [
+          657,
+          220
+        ],
+        [
+          677,
+          212
+        ],
+        [
+          680,
+          211
+        ]
+      ],
+      "stroke": "#315f97",
+      "sw": 2.37,
+      "dash": "none",
+      "opacity": 1
+    },
+    {
+      "id": 4,
+      "type": "line",
+      "x1": 80,
+      "y1": 447,
+      "x2": 79,
+      "y2": 775,
+      "stroke": "#000000",
+      "sw": 2.37,
+      "dash": "none",
+      "arrow": "end",
+      "opacity": 1
+    },
+    {
+      "id": 5,
+      "type": "polyline",
+      "points": [
+        [
+          156,
+          512
+        ],
+        [
+          176,
+          526
+        ],
+        [
+          192,
+          538
+        ],
+        [
+          212,
+          543
+        ],
+        [
+          236,
+          561
+        ],
+        [
+          260,
+          565
+        ],
+        [
+          280,
+          575
+        ],
+        [
+          317,
+          582
+        ],
+        [
+          337,
+          582
+        ],
+        [
+          355,
+          578
+        ],
+        [
+          379,
+          569
+        ],
+        [
+          395,
+          564
+        ],
+        [
+          435,
+          556
+        ],
+        [
+          474,
+          555
+        ],
+        [
+          504,
+          553
+        ],
+        [
+          526,
+          564
+        ],
+        [
+          545,
+          577
+        ],
+        [
+          565,
+          593
+        ],
+        [
+          577,
+          608
+        ],
+        [
+          586,
+          619
+        ],
+        [
+          609,
+          645
+        ],
+        [
+          625,
+          662
+        ],
+        [
+          657,
+          669
+        ],
+        [
+          677,
+          677
+        ],
+        [
+          680,
+          679
+        ]
+      ],
+      "stroke": "#315f97",
+      "sw": 2.37,
+      "dash": "none",
+      "opacity": 1
+    },
+    {
+      "id": 6,
+      "type": "ellipse",
+      "cx": 156,
+      "cy": 447,
+      "rx": 13,
+      "ry": 66,
+      "stroke": "#315f97",
+      "sw": 2.37,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 7,
+      "type": "ellipse",
+      "cx": 680,
+      "cy": 445,
+      "rx": 46,
+      "ry": 235,
+      "stroke": "#315f97",
+      "sw": 2.37,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 8,
+      "type": "rect",
+      "x": 62,
+      "y": 20,
+      "w": 38,
+      "h": 45,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 9,
+      "type": "text",
+      "x": 80,
+      "y": 42,
+      "text": "y",
+      "fs": 25,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    },
+    {
+      "id": 10,
+      "type": "rect",
+      "x": 48,
+      "y": 456,
+      "w": 28,
+      "h": 45,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 11,
+      "type": "text",
+      "x": 62,
+      "y": 479,
+      "text": "0",
+      "fs": 25,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    },
+    {
+      "id": 12,
+      "type": "rect",
+      "x": 830,
+      "y": 447,
+      "w": 43,
+      "h": 52,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 13,
+      "type": "text",
+      "x": 851,
+      "y": 472,
+      "text": "x",
+      "fs": 28,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    },
+    {
+      "id": 14,
+      "type": "line",
+      "x1": 157,
+      "y1": 382,
+      "x2": 157,
+      "y2": 448,
+      "stroke": "#000000",
+      "sw": 0.5,
+      "dash": "dotted",
+      "arrow": "none",
+      "opacity": 1
+    },
+    {
+      "id": 15,
+      "type": "line",
+      "x1": 681,
+      "y1": 211,
+      "x2": 681,
+      "y2": 447,
+      "stroke": "#000000",
+      "sw": 0.5,
+      "dash": "dotted",
+      "arrow": "none",
+      "opacity": 1
+    },
+    {
+      "id": 16,
+      "type": "line",
+      "x1": 158,
+      "y1": 381,
+      "x2": 83,
+      "y2": 381,
+      "stroke": "#000000",
+      "sw": 0.5,
+      "dash": "dotted",
+      "arrow": "none",
+      "opacity": 1
+    },
+    {
+      "id": 17,
+      "type": "line",
+      "x1": 682,
+      "y1": 211,
+      "x2": 82,
+      "y2": 211,
+      "stroke": "#000000",
+      "sw": 0.5,
+      "dash": "dotted",
+      "arrow": "none",
+      "opacity": 1
+    },
+    {
+      "id": 18,
+      "type": "rect",
+      "x": 34,
+      "y": 189,
+      "w": 83,
+      "h": 50,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 19,
+      "type": "text",
+      "x": 76,
+      "y": 213,
+      "text": "y₁",
+      "fs": 27,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    },
+    {
+      "id": 20,
+      "type": "rect",
+      "x": 20,
+      "y": 356,
+      "w": 83,
+      "h": 50,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 21,
+      "type": "text",
+      "x": 62,
+      "y": 381,
+      "text": "y₀",
+      "fs": 27,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    },
+    {
+      "id": 22,
+      "type": "rect",
+      "x": 657,
+      "y": 447,
+      "w": 83,
+      "h": 50,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 23,
+      "type": "text",
+      "x": 699,
+      "y": 472,
+      "text": "x₁",
+      "fs": 27,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    },
+    {
+      "id": 24,
+      "type": "rect",
+      "x": 132,
+      "y": 447,
+      "w": 83,
+      "h": 50,
+      "rx": 3,
+      "stroke": "none",
+      "sw": 0.5,
+      "fill": "#ffffff",
+      "fillNone": true,
+      "fillOpacity": 100,
+      "opacity": 1
+    },
+    {
+      "id": 25,
+      "type": "text",
+      "x": 174,
+      "y": 472,
+      "text": "x₀",
+      "fs": 27,
+      "tc": "#000000",
+      "bold": false,
+      "italic": false,
+      "align": "middle",
+      "opacity": 1
+    }
+  ],
+  "meta": {
+    "source": "hml_to_gtree.py",
+    "warnings": []
+  }
+}

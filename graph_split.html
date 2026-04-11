@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>graph 이미지 분할</title>
+  <style>
+    :root {
+      --page-bg: #f4f1ea;
+      --card-bg: #fffdf8;
+      --line: #d7cfbf;
+      --text: #2f2a22;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 20px 48px;
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      background: linear-gradient(180deg, #f8f4ec 0%, #efe7d8 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+    p {
+      margin: 0 0 24px;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    figure {
+      margin: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 10px 30px rgba(60, 42, 18, 0.08);
+    }
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      background: white;
+    }
+    figcaption {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #5e5649;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>graph 4분할 이미지</h1>
+    <p>원본 `graph.hml`에 포함된 PNG를 4개 영역으로 나누고, 아래 HTML에서 각각 불러오도록 구성했습니다.</p>
+    <div class="grid">
+      <figure>
+        <img src="graph_part_1.png" alt="graph part 1">
+        <figcaption>좌상단</figcaption>
+      </figure>
+      <figure>
+        <img src="graph_part_2.png" alt="graph part 2">
+        <figcaption>우상단</figcaption>
+      </figure>
+      <figure>
+        <img src="graph_part_3.png" alt="graph part 3">
+        <figcaption>좌하단</figcaption>
+      </figure>
+      <figure>
+        <img src="graph_part_4.png" alt="graph part 4">
+        <figcaption>우하단</figcaption>
+      </figure>
+    </div>
+  </div>
+</body>
+</html>

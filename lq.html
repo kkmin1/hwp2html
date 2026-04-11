@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>LQ</title>
+
+        <!-- KaTeX 수식 렌더링 -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+        />
+        <script>
+            (function () {
+                function renderAllMath() {
+                    document
+                        .querySelectorAll("span.math")
+                        .forEach(function (el) {
+                            katex.render(el.textContent, el, {
+                                throwOnError: false,
+                                displayMode: false,
+                            });
+                        });
+                }
+                var script = document.createElement("script");
+                script.src =
+                    "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js";
+                script.onload = renderAllMath;
+                document.head.appendChild(script);
+            })();
+        </script>
+
+        <style>
+            body {
+                font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 2em;
+                line-height: 1.8;
+                color: #222;
+                background: #fff;
+            }
+            h1 {
+                font-size: 1.8em;
+                border-bottom: 2px solid #333;
+                padding-bottom: 0.3em;
+                margin-top: 1.5em;
+            }
+            h2 {
+                font-size: 1.5em;
+                border-bottom: 1px solid #999;
+                padding-bottom: 0.2em;
+                margin-top: 1.3em;
+            }
+            h3 {
+                font-size: 1.2em;
+                margin-top: 1.1em;
+                color: #444;
+            }
+            h4,
+            h5,
+            h6 {
+                font-size: 1.05em;
+                margin-top: 1em;
+                color: #555;
+            }
+            p {
+                margin: 0.5em 0 0.8em;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 1em 0;
+                font-size: 0.95em;
+            }
+            td,
+            th {
+                border: 1px solid #aaa;
+                padding: 6px 10px;
+                vertical-align: top;
+            }
+            tr:nth-child(even) td {
+                background: #f9f9f9;
+            }
+            figure.hml-figure {
+                margin: 1.5em auto;
+                text-align: center;
+                overflow-x: auto;
+            }
+            .img-placeholder {
+                background: #f0f0f0;
+                border: 1px dashed #aaa;
+                padding: 1em;
+                text-align: center;
+                color: #888;
+                margin: 1em 0;
+            }
+            .footnotes {
+                font-size: 0.85em;
+                color: #555;
+            }
+            .footnotes li {
+                margin-bottom: 0.4em;
+            }
+            sup a {
+                color: #0066cc;
+                text-decoration: none;
+            }
+            sup a:hover {
+                text-decoration: underline;
+            }
+            .katex-display {
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <h4>
+            <br /><span style="font-weight: 700">LQ(linear quadratic)</span
+            ><span style="font-weight: 700"> 문제</span>
+        </h4>
+        <p>
+            기간 [<span class="math">0,\, \tau</span>] 동안 2차 형식으로 된
+            비용을 최소화하는 다음과 같은 형태의 문제를 LQ 문제, 또는 LQ 규제(LQ
+            control)라 한다.
+        </p>
+        <p>
+            <span class="math">\min</span
+            ><span class="math">\int_{0}^{\tau }</span
+            ><span class="math"
+                >[\mathbf{x}^{\top}(t)\mathbf{Qx}(t) +
+                \mathbf{u}^{\top}(t)\mathbf{Ru}(t)]dt + \mathbf{x}^{\top}</span
+            ><span class="math">( \tau )</span
+            ><span class="math">\mathbf{Hx}</span
+            ><span class="math">( \tau )</span>
+        </p>
+        <p>
+            s.t <span class="math">\mathbf{x}</span><span class="math">'</span
+            ><span class="math"
+                >(t) = \mathbf{Ax}(t) + \mathbf{Bu}(t) \mathbf{x}</span
+            >
+        </p>
+        <p>
+            <span class="math">\mathbf{x}</span>는 n×1 벡터,
+            <span class="math">\mathbf{u}</span>는 m×1 벡터,
+            <span class="math">\mathbf{A}</span>는 n×n 행렬,
+            <span class="math">\mathbf{B}</span>는 n×m 행렬,
+            <span class="math">\mathbf{Q}</span>,
+            <span class="math">\mathbf{H}</span>는 n×n positive semidefinite
+            대칭행렬, <span class="math">\mathbf{R}</span>은 m×m positive
+            definite 대칭행렬
+        </p>
+        <p>
+            <span class="math">\mathbf{x}^{\top}</span>는
+            <span class="math">\mathbf{x}</span>의 전치(transpose)를 의미
+        </p>
+        <p>HJB 방정식은</p>
+        <p>
+            <span class="math">-V</span><span class="math">{}_{t}</span
+            ><span class="math"
+                >= \min\mathbf{u}{\mathbf{x}^{\top}\mathbf{Qx} +
+                \mathbf{u}^{\top}\mathbf{Ru} + V\mathbf{x}(\mathbf{Ax} +
+                \mathbf{Bu})}, V(\mathbf{x},</span
+            ><span class="math">\tau</span
+            ><span class="math">) = \mathbf{x}^{\top}</span
+            ><span class="math">( \tau )</span
+            ><span class="math">\mathbf{Px}</span
+            ><span class="math">( \tau )</span>
+        </p>
+        <p>
+            where <span class="math">V_{t}</span> =
+            <span class="math">\frac{\partial V(\mathbf{x},t)}{\partial t}</span
+            ><span class="math">, V_{\mathbf{x}} =</span
+            ><span class="math"
+                >\frac{\partial V(\mathbf{x},t)}{\partial \mathbf{x}}</span
+            >
+        </p>
+        <p>
+            HJB 방정식을 풀기 위해서는 가치함수를 추정해야 한다. 가치함수는 보통
+            목적식이나 말기함수의 형태를 따라 추정한다.
+        </p>
+        <p>
+            <span class="math"
+                >V(\mathbf{x},t) =
+                \mathbf{x}^{\top}\mathbf{P}(t)\mathbf{x}</span
+            >로 추정하면, <span class="math">\mathbf{P}</span>(t)는 대칭행렬
+        </p>
+        <p>
+            V<span class="math">{}_{t}</span
+            ><span class="math"
+                >(\mathbf{x},t) = \mathbf{x}^{\top}\mathbf{P}</span
+            ><span class="math">'</span>(t)<span class="math">\mathbf{x}</span
+            >............<sup><a id="fnref1" href="#fn1">[1]</a></sup>
+        </p>
+        <p>
+            <span class="math"
+                >V\mathbf{x}(\mathbf{x},t) = 2\mathbf{x}^{\top}\mathbf{P}(t)
+                ..............</span
+            ><sup><a id="fnref2" href="#fn2">[2]</a></sup>
+        </p>
+        <p>이를 HJB 방정식에 대입하면</p>
+        <p>
+            <span class="math">-\mathbf{x}^{\top}\mathbf{P}</span
+            ><span class="math">'</span
+            ><span class="math"
+                >(t)\mathbf{x} = \min\mathbf{u}{\mathbf{x}^{\top}\mathbf{Qx} +
+                \mathbf{u}^{\top}\mathbf{Ru} +
+                2\mathbf{x}^{\top}\mathbf{P}(\mathbf{Ax} + \mathbf{Bu})}
+                .................①</span
+            >
+        </p>
+        <p>
+            최소값을 구하기 위해 중괄호안을
+            <span class="math">\mathbf{u}</span>에 대해 미분하면 1차조건은
+        </p>
+        <p>
+            <span class="math"
+                >2\mathbf{u}^{\top}\mathbf{R} +
+                2\mathbf{x}^{\top}\mathbf{\mathbf{P}\mathbf{B}} = 0</span
+            >
+        </p>
+        <p>
+            <span class="math"
+                >⇒ \mathbf{Ru} = -\mathbf{B}^{\top}\mathbf{Px}, (∵ \mathbf{R},
+                \mathbf{P}</span
+            >는 대칭행렬)
+        </p>
+        <p>
+            <span class="math">∴ \mathbf{u} = -\mathbf{R}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math">\mathbf{B}^{\top}\mathbf{Px}</span>
+        </p>
+        <p>
+            <span class="math"
+                >⇒ \mathbf{u}^{\top} =
+                -\mathbf{x}^{\top}\mathbf{\mathbf{P}\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span>
+        </p>
+        <p>
+            <span class="math">\mathbf{u}</span>를 ①에 대입하면
+            <span class="math">\mathbf{u}</span>는 최소화값이므로 min 연산자가
+            제거된다.
+        </p>
+        <p>
+            <span class="math">-\mathbf{x}^{\top}\mathbf{P}</span
+            ><span class="math">'</span
+            ><span class="math"
+                >\mathbf{x} = \mathbf{x}^{\top}\mathbf{Qx} +
+                \mathbf{x}^{\top}\mathbf{\mathbf{P}\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math">\mathbf{\mathbf{R}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math"
+                >\mathbf{B}^{\top}\mathbf{Px} +
+                2\mathbf{x}^{\top}\mathbf{P}(\mathbf{Ax} -
+                \mathbf{\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math">\mathbf{B}^{\top}\mathbf{Px})</span>
+        </p>
+        <p>
+            <span class="math">⇒ \mathbf{x}^{\top}\mathbf{P}</span
+            ><span class="math">'</span
+            ><span class="math"
+                >\mathbf{x} + \mathbf{x}^{\top}\mathbf{Qx} +
+                \mathbf{x}^{\top}\mathbf{\mathbf{P}\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math"
+                >\mathbf{B}^{\top}\mathbf{Px} +
+                2\mathbf{x}^{\top}\mathbf{P}(\mathbf{Ax} -
+                \mathbf{\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math">\mathbf{B}^{\top}\mathbf{Px}) = 0</span>
+        </p>
+        <p>
+            <span class="math">⇒ \mathbf{x}^{\top}\mathbf{P}</span
+            ><span class="math">'</span
+            ><span class="math"
+                >\mathbf{x} + \mathbf{x}^{\top}\mathbf{Qx} -
+                \mathbf{x}^{\top}\mathbf{\mathbf{P}\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math"
+                >\mathbf{B}^{\top}\mathbf{Px} + 2\mathbf{x}^{\top}\mathbf{PAx} =
+                0</span
+            >
+        </p>
+        <p>
+            <span class="math">⇒ \mathbf{x}^{\top}(\mathbf{P}</span
+            ><span class="math">'</span
+            ><span class="math"
+                >+ \mathbf{Q} - \mathbf{\mathbf{P}\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math"
+                >\mathbf{B}^{\top}\mathbf{P} + \mathbf{\mathbf{P}\mathbf{A}} +
+                \mathbf{A}^{\top}\mathbf{P})\mathbf{x} = 0................</span
+            ><sup><a id="fnref3" href="#fn3">[3]</a></sup>
+        </p>
+        <p>이것이 항상 성립하기 위해서는</p>
+        <p>
+            <span class="math">\mathbf{P}</span><span class="math">'</span
+            ><span class="math"
+                >+ \mathbf{Q} - \mathbf{\mathbf{P}\mathbf{B}\mathbf{R}}</span
+            ><span class="math">{}^{-1}</span
+            ><span class="math"
+                >\mathbf{B}^{\top}\mathbf{P} + \mathbf{\mathbf{P}\mathbf{A}} +
+                \mathbf{A}^{\top}\mathbf{P} = 0</span
+            >
+        </p>
+        <p>
+            이는 <span class="math">\mathbf{P}</span
+            ><span class="math">'</span>에 관한 Riccati 미분방정식이다. 이는
+            정형화된 해가 존재하므로 LQ 문제의 경우 항상 해가 존재한다.
+        </p>
+        <p>예)</p>
+        <p>
+            <span class="math">\min</span
+            ><span class="math"
+                >\int_{0}^{\top} {[y(t) ^{2} +u(t) ^{2} ]dt}</span
+            >
+        </p>
+        <p>
+            s.t <span class="math">y ' (t)=ay(t)+bu(t)</span>, a, b는 스칼라
+            상수
+        </p>
+        <p>(풀이)</p>
+        <p>HJB 방정식은</p>
+        <p>
+            <span class="math"
+                >- \frac{\partial V(y,\,t)}{\partial t} \,=\,\min_{u(t)\,}
+                \left\{ y^{2} +u^{2} \,+\, \frac{\partial V(y,\,t)}{\partial y}
+                (ay+bu) \right\}</span
+            >
+        </p>
+        <p>
+            가치함수를 <span class="math">V(y,\,t)\,=\,p(t)y^{2}</span>으로
+            추정한다.
+        </p>
+        <p>이를 HJB 방정식에 대입하면</p>
+        <p>
+            <span class="math"
+                >-p ' y^{2} \,=\,\min_{u(t)\,} \left\{ y^{2} +u^{2}
+                \,+\,2py(ay+bu) \right\}</span
+            >.................①
+        </p>
+        <p>최소값을 구하기 위해 중괄호안을 u에 대해 미분하면, 1차 조건은</p>
+        <p>
+            <span class="math">2u+2pyb\,=\,0</span> ⇒
+            <span class="math">u\,=\,-pyb</span>
+        </p>
+        <p>u를 ①에 대입하면</p>
+        <p>
+            <span class="math"
+                >-p ' y^{2} \,=\,y^{2} +p^{2} y^{2} b^{2}
+                \,+\,2py(ay-bpyb)</span
+            >
+        </p>
+        <p>
+            <span class="math"
+                >0\,=\,y^{2} (p ' +1+p^{2} b^{2} \,+\,2pa-2b^{2} p^{2} )</span
+            >
+        </p>
+        <p>항상 성립하기 위해서는</p>
+        <p>
+            <span class="math">p ' -b^{2} p^{2} \,+\,2ap\,+1\,=\,0</span>
+            ..............②
+        </p>
+        <p>이는 Riccati 미분방정식이다.</p>
+        <p>
+            Riccati 미분방정식을 풀기 위해 이를 만족하는 한 특수해를 구한다.<sup
+                ><a id="fnref4" href="#fn4">[4]</a></sup
+            >
+        </p>
+        <p><span class="math">p(t)= \alpha</span>, 상수라 하면 ②는</p>
+        <p>
+            <span class="math">b^{2} \alpha^{2} \,-\,2a \alpha \,-1\,=\,0</span>
+        </p>
+        <p>
+            ∴
+            <span class="math"
+                >\alpha \,=\, \frac{a\pm \sqrt {a^{2} +b^{2}}}{b^{2}}</span
+            >
+        </p>
+        <p>
+            <span class="math">V(y,\,t)\, \geq \,0</span> ⇒
+            <span class="math">p(t)\, \geq \,0</span> ⇒
+            <span class="math">\alpha \, \geq \,0</span> 이므로
+        </p>
+        <p>
+            ∴
+            <span class="math"
+                >\alpha *\,=\, \frac{a+ \sqrt {a^{2} +b^{2}}}{b^{2}}</span
+            >
+        </p>
+        <p>
+            따라서 <span class="math">\alpha *</span>는 Riccati 미분방정식을
+            만족하는 한 특수해가 된다.
+        </p>
+        <p>
+            <span class="math">z\,=\, \frac{1}{p- \alpha *}</span> 라 하면,
+            공식에 따라<sup><a id="fnref5" href="#fn5">[5]</a></sup>
+        </p>
+        <p>
+            <span class="math"
+                >\frac{dz}{dt} \,=\,-b^{2} \,-\,(2b^{2} \alpha *-2a)z</span
+            >
+        </p>
+        <p>
+            <span class="math">\,=\,-b^{2} \,-\,2z \sqrt {a^{2} +b^{2}}</span>
+        </p>
+        <p>
+            ⇒
+            <span class="math"
+                >\frac{1}{b^{2} \,+\,2z \sqrt{a^{2} +b^{2}} }\frac{dz}{dt}
+                \,=\,-1</span
+            >
+        </p>
+        <p>양변 적분하면</p>
+        <p>
+            <span class="math"
+                >\frac{1}{2z \sqrt {a^{2} +b^{2}}} \,\ln (b^{2} \,+2z \sqrt
+                {a^{2} +b^{2}} )\,=\,-t+C_{0}</span
+            >
+        </p>
+        <p>
+            ⇒
+            <span class="math"
+                >b^{2} \,+2z \sqrt {a^{2} +b^{2}} \,=\,C_{1} \,\exp[-2z \sqrt
+                {a^{2} +b^{2}} t]</span
+            >
+        </p>
+        <p>
+            ⇒
+            <span class="math"
+                >z\,=\,C_{2} \,\exp[-2z \sqrt {a^{2} +b^{2}} t]- \frac{b^{2}}{2
+                \sqrt {a^{2} +b^{2}}}</span
+            >
+        </p>
+        <p>
+            ∴ <span class="math">p(t)\,=\, \frac{1}{z} \,+\, \alpha *</span>,
+            where
+            <span class="math"
+                >z\,=\,C_{2} \,\exp[-2z \sqrt {a^{2} +b^{2}} t]- \frac{b^{2}}{2
+                \sqrt {a^{2} +b^{2}}}</span
+            >,
+            <span class="math"
+                >\alpha *\,=\, \frac{a+ \sqrt {a^{2} +b^{2}}}{b^{2}}</span
+            >
+        </p>
+        <p>
+            따라서 가치함수는
+            <span class="math">V(y,\,t)\,=\,p(t)y(t) ^{2}</span>, 정책함수는
+            <span class="math">u(t)\,=\,-bp(t)y(t)</span>
+        </p>
+        <p>(풀이끝)</p>
+        <hr />
+        <section class="footnotes">
+            <ol>
+                <li id="fn1">
+                    <p>
+                        <span class="math">\mathbf{x}</span>도 t의 함수이지만
+                        편미분의 정의에 따라 여기서는
+                        <span class="math">\mathbf{x}</span>를 상수로 본다.
+                        수학기초 ‘편미분의 정의’ 참조
+                    </p>
+                    <a href="#fnref1">↩</a>
+                </li>
+                <li id="fn2">
+                    <p>‘행렬 미분’ 참조</p>
+                    <a href="#fnref2">↩</a>
+                </li>
+                <li id="fn3">
+                    <p>
+                        <span class="math"
+                            >2\mathbf{x}^{\top}\mathbf{Mx} =
+                            \mathbf{x}^{\top}\mathbf{Mx} +
+                            \mathbf{x}^{\top}\mathbf{M}^{\top}\mathbf{x}</span
+                        >, 행렬 2차 형식 참조.
+                    </p>
+                    <a href="#fnref3">↩</a>
+                </li>
+                <li id="fn4">
+                    <p>미분방정식 ‘Riccati 방정식’ 참조</p>
+                    <a href="#fnref4">↩</a>
+                </li>
+                <li id="fn5">
+                    <p>미분방정식 ‘Riccati 방정식’ 참조</p>
+                    <a href="#fnref5">↩</a>
+                </li>
+            </ol>
+        </section>
+    </body>
+</html>

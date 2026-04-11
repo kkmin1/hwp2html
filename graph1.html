@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>graph1</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script>
+(function() {
+  function renderAllMath() {
+    document.querySelectorAll('span.math').forEach(function(el) {
+      katex.render(el.textContent, el, {throwOnError: false, displayMode: false});
+    });
+  }
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+  script.onload = renderAllMath;
+  document.head.appendChild(script);
+})();
+</script>
+<style>
+  body {
+    margin: 0;
+    padding: 24px;
+    background: #fafafa;
+    color: #222;
+    font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  }
+  .frame {
+    width: fit-content;
+    margin: 0 auto;
+    padding: 18px;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" viewBox="-15.0 -15.0 767.9 729.6" width="467" height="443" style="display:block;margin:1em auto;overflow:visible;">
+  <!-- 화살표 마커 정의 -->
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L7,3 z" fill="#000"/>
+    </marker>
+  </defs>
+  <!-- 도형 본체 시작 -->
+  <!-- y축 그리기 -->
+  <line x1="48.3" y1="624.3" x2="48.7" y2="28.3" stroke="#000000" stroke-width="2.37" marker-end="url(#arr)" />
+  <!-- x축 그리기 -->
+  <line x1="48.3" y1="624.3" x2="699.4" y2="624.3" stroke="#000000" stroke-width="2.37" marker-end="url(#arr)" />
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="0.0" y="0.0" width="43.2" height="52.5" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="21.6" y="26.2" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">y</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="690.8" y="624.5" width="47.1" height="50.8" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="714.3" y="649.9" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">x</tspan>
+  </text>
+  <!-- 일반 선 그리기 -->
+  <line x1="119.7" y1="558.5" x2="119.7" y2="624.5" stroke="#000000" stroke-width="0.50" stroke-dasharray="4,4"  />
+  <!-- 일반 선 그리기 -->
+  <line x1="485.3" y1="103.3" x2="485.3" y2="626.5" stroke="#000000" stroke-width="0.50" stroke-dasharray="4,4"  />
+  <!-- 일반 선 그리기 -->
+  <line x1="47.6" y1="558.5" x2="119.7" y2="558.5" stroke="#000000" stroke-width="0.50" stroke-dasharray="4,4"  />
+  <!-- 일반 선 그리기 -->
+  <line x1="48.6" y1="103.3" x2="485.3" y2="103.3" stroke="#000000" stroke-width="0.50" stroke-dasharray="4,4"  />
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="100.3" y="596.8" width="86.6" height="102.8" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="143.6" y="648.2" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">x</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">0</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="453.9" y="596.8" width="73.9" height="102.8" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="490.9" y="648.2" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">x</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">1</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="0.0" y="524.7" width="65.6" height="69.1" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="32.8" y="559.3" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">y</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">0</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="0.0" y="69.9" width="73.5" height="71.2" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="36.7" y="105.5" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">y</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">1</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="125.3" y="364.5" width="103.0" height="51.0" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="0.0" y="619.7" width="47.1" height="50.8" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 축 이름/좌표 라벨 텍스트 -->
+  <text x="23.5" y="645.1" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">0</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="125.3" y="539.8" width="123.3" height="57.0" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 수식 라벨 -->
+  <text x="186.9" y="568.3" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">(</tspan>
+    <tspan baseline-shift="baseline">x</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">0</tspan>
+    <tspan baseline-shift="baseline"> </tspan>
+    <tspan baseline-shift="baseline">,</tspan>
+    <tspan baseline-shift="baseline"> </tspan>
+    <tspan baseline-shift="baseline">y</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">0</tspan>
+    <tspan baseline-shift="baseline"> </tspan>
+    <tspan baseline-shift="baseline">)</tspan>
+  </text>
+  <!-- 라벨 배치용 사각형 -->
+  <rect x="486.1" y="69.9" width="123.3" height="57.0" fill="none" stroke="none" stroke-width="0.50"/>
+  <!-- 수식 라벨 -->
+  <text x="547.7" y="98.4" fill="#111111" font-family="HCR Batang,'함초롬바탕',serif" font-weight="700" font-size="28px" text-anchor="middle" dominant-baseline="middle">
+    <tspan baseline-shift="baseline">(</tspan>
+    <tspan baseline-shift="baseline">x</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">1</tspan>
+    <tspan baseline-shift="baseline"> </tspan>
+    <tspan baseline-shift="baseline">,</tspan>
+    <tspan baseline-shift="baseline"> </tspan>
+    <tspan baseline-shift="baseline">y</tspan>
+    <tspan dx="-6.2" baseline-shift="-22%" font-size="19.0px">1</tspan>
+    <tspan baseline-shift="baseline"> </tspan>
+    <tspan baseline-shift="baseline">)</tspan>
+  </text>
+  <!-- 교점의 굵은 점 그리기 -->
+  <ellipse cx="119.7" cy="558.5" rx="4.8" ry="4.9" fill="#000000" stroke="#000000" stroke-width="0.50"/>
+  <!-- 교점의 굵은 점 그리기 -->
+  <ellipse cx="485.3" cy="103.3" rx="5.6" ry="4.9" fill="#000000" stroke="#000000" stroke-width="0.50"/>
+  <!-- 일반 선 그리기 -->
+  <line x1="121.5" y1="553.6" x2="486.1" y2="103.7" stroke="#ca56a7" stroke-width="2.37"   />
+</svg>
+</div>
+</body>
+</html>

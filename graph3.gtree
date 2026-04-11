@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "appName": "KS 이미지 에디터",
+  "cvW": 775,
+  "cvH": 529,
+  "objects": [
+    {
+      "id": 1,
+      "type": "bezier",
+      "points": [
+        [
+          20,
+          20
+        ],
+        [
+          403,
+          22
+        ],
+        [
+          403,
+          346
+        ],
+        [
+          755,
+          509
+        ],
+        [
+          755,
+          507
+        ]
+      ],
+      "stroke": "#000000",
+      "sw": 0.5,
+      "dash": "none",
+      "arrow": "none",
+      "opacity": 1
+    }
+  ],
+  "meta": {
+    "source": "hml_to_gtree.py",
+    "warnings": []
+  }
+}
