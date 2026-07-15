@@ -10,7 +10,7 @@ hml2html.py - 한글(HML) → HTML 변환기
 """
 
 import xml.etree.ElementTree as ET
-import sys, re, os, base64, html
+import sys, re, os, base64, html, json, shutil
 from collections import defaultdict
 
 from hml_table_renderer import render_table as render_shared_table
@@ -759,12 +759,14 @@ def container_to_svg(container_elem, eq_script_map):
 # ──────────────────────────────────────────────
 
 class HmlConverter:
-    def __init__(self, hml_path, render_svg=True, media_dir=None):
+    def __init__(self, hml_path, render_svg=True, media_dir=None, fallback_images=None):
         self.hml_path  = hml_path
         self.render_svg = render_svg
         # media 폴더: HTML 파일과 같은 디렉토리의 'media' 서브폴더
         self.media_dir = media_dir  # 절대 경로 (None이면 base64 embed 방식)
         self.media_counter = 0      # 미디어 파일 번호
+        self.container_counter = 0
+        self.fallback_images = list(fallback_images or [])
         self.media_prefix = self._build_media_prefix()
         self.tree = ET.parse(hml_path)
         self.root = self.tree.getroot()
@@ -807,15 +809,29 @@ class HmlConverter:
         for ps in self.root.iter('PARASHAPE'):
             self.para_shapes[ps.get('Id')] = ps.attrib
         for border_fill in self.root.iter('BORDERFILL'):
-            self.border_fills[border_fill.get('Id')] = {
+            fill_data = {
                 child.tag: dict(child.attrib)
                 for child in border_fill
                 if child.tag in {'LEFTBORDER', 'RIGHTBORDER', 'TOPBORDER', 'BOTTOMBORDER'}
             }
+            fillbrush = border_fill.find('FILLBRUSH')
+            if fillbrush is not None:
+                window = fillbrush.find('WINDOWBRUSH')
+                gradation = fillbrush.find('GRADATION')
+                if window is not None:
+                    fill_data['__fill__'] = {'type': 'solid', **dict(window.attrib)}
+                elif gradation is not None:
+                    colors = [c.get('Value', '') for c in gradation.findall('COLOR')]
+                    fill_data['__fill__'] = {
+                        'type': 'gradient', **dict(gradation.attrib), 'colors': colors
+                    }
+            self.border_fills[border_fill.get('Id')] = fill_data
         for cs in self.root.iter('CHARSHAPE'):
             attrib = dict(cs.attrib)
             attrib['bold'] = cs.find('BOLD') is not None
             attrib['italic'] = cs.find('ITALIC') is not None
+            attrib['subscript'] = cs.find('SUBSCRIPT') is not None
+            attrib['superscript'] = cs.find('SUPERSCRIPT') is not None
             fontid = cs.find('FONTID')
             if fontid is not None:
                 attrib['hangul_font_id'] = fontid.get('Hangul')
@@ -870,6 +886,15 @@ class HmlConverter:
 
     def _get_heading_tag(self, p_elem) -> str:
         """P 태그의 CharShape Height/Bold 기반으로 제목 레벨 결정"""
+        plain_text = ''.join(
+            child.text or ''
+            for text_elem in p_elem.findall('TEXT')
+            for child in text_elem
+            if child.tag == 'CHAR'
+        ).strip()
+        # 글머리표가 붙은 평문을 굵다는 이유만으로 제목으로 오인하지 않는다.
+        if plain_text.startswith(('○', '◦', '●', '•', '·', '■', '□', '◆', '◇')):
+            return 'p'
         if any(
             child.tag in {'EQUATION', 'TABLE', 'CONTAINER', 'PICTURE'}
             for text_elem in p_elem.findall('TEXT')
@@ -893,9 +918,9 @@ class HmlConverter:
             break
         return 'p'
 
-    def para_to_html(self, p_elem) -> str:
+    def para_to_html(self, p_elem, *, allow_heading: bool = True) -> str:
         """P 태그 → HTML 단락"""
-        tag = self._get_heading_tag(p_elem)
+        tag = self._get_heading_tag(p_elem) if allow_heading else 'p'
 
         # 내용 변환
         content = self.textblock_to_html(p_elem)
@@ -903,11 +928,18 @@ class HmlConverter:
         if not content.strip():
             return ''  # 빈 단락 생략
 
+        # 한글의 표는 문단 안 개체로 저장되지만 HTML에서 <p><table>은 유효하지 않다.
+        stripped = content.strip()
+        if stripped.startswith('<table') and stripped.endswith('</table>'):
+            return content
+
         style_parts = []
         para_shape = self.para_shapes.get(p_elem.get('ParaShape', ''), {})
         align = ALIGN_MAP.get(para_shape.get('Align', ''))
         if align:
             style_parts.append(f'text-align:{align}')
+        if 'class="hml-figure' in content:
+            style_parts.append('margin:0.1em 0')
         style_attr = f' style="{";".join(style_parts)}"' if style_parts else ''
 
         # h 태그 앞에 두 줄 띄기 + <br> (가독성 + 시각적 여백)
@@ -965,6 +997,12 @@ class HmlConverter:
     def _collect_text_tokens(self, text_elem):
         """TEXT 태그 안의 내용을 텍스트/비텍스트 토큰으로 분리한다."""
         char_buffer = []
+        char_shape = self.char_shapes.get(text_elem.get('CharShape', ''), {})
+        script_tag = (
+            'sub' if char_shape.get('subscript')
+            else 'sup' if char_shape.get('superscript')
+            else None
+        )
 
         def flush_char_buffer():
             if char_buffer:
@@ -976,7 +1014,12 @@ class HmlConverter:
 
             if tag == 'CHAR':
                 if child.text:
-                    char_buffer.append(child.text)
+                    if script_tag:
+                        yield from flush_char_buffer()
+                        rendered = self.char_to_html(child.text)
+                        yield ('html', f'<{script_tag}>{rendered}</{script_tag}>')
+                    else:
+                        char_buffer.append(child.text)
 
             elif tag == 'EQUATION':
                 yield from flush_char_buffer()
@@ -1051,13 +1094,13 @@ class HmlConverter:
         # 수식 클래스 부여는 EQUATION/SCRIPT 노드에서만 처리한다.
         return html.escape(text)
 
-    def paralist_to_html(self, paralist_elem) -> str:
+    def paralist_to_html(self, paralist_elem, *, cell_mode: bool = False) -> str:
         """PARALIST 내 여러 P를 HTML로"""
         if paralist_elem is None:
             return ''
         parts = []
         for p in paralist_elem.findall('P'):
-            parts.append(self.para_to_html(p))
+            parts.append(self.para_to_html(p, allow_heading=not cell_mode))
         return ''.join(parts)
 
     # ── 표 변환 ──────────────────────────────────
@@ -1067,7 +1110,7 @@ class HmlConverter:
         return render_shared_table(
             table_elem,
             self.border_fills,
-            lambda cell: self.paralist_to_html(cell.find('PARALIST')),
+            lambda cell: self.paralist_to_html(cell.find('PARALIST'), cell_mode=True),
         )
 
     # ── 이미지 변환 ──────────────────────────────
@@ -1104,13 +1147,40 @@ class HmlConverter:
         return f'<img src="{rel_path}" style="max-width:100%;">\n'
 
     def container_to_html(self, ct_elem) -> str:
-        """CONTAINER → 수동 이미지 연결용 placeholder"""
-        rel_path, _ = self._next_media_path('gif')
-        return (
-            '<div class="img-placeholder object-image-placeholder">'
-            f'[객체이미지: {rel_path} 연결 필요]'
-            '</div>\n'
-        )
+        """CONTAINER → GTree(편집용) + SVG(표시용), 실패 시 한글 GIF 대체."""
+        self.container_counter += 1
+        index = self.container_counter
+        try:
+            from hml_to_gtree import GTreeBuilder
+            from gtree_to_svg import render as render_gtree_svg
+
+            builder = GTreeBuilder(sys.modules[__name__])
+            builder._root = self.root
+            builder.consume_container(ct_elem)
+            data = builder.build()
+            svg = render_gtree_svg(data)
+            if self.media_dir:
+                stem = f'{self.media_prefix}_graph_{index:03d}'
+                gtree_path = os.path.join(self.media_dir, stem + '.gtree')
+                svg_path = os.path.join(self.media_dir, stem + '.svg')
+                with open(gtree_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+                with open(svg_path, 'w', encoding='utf-8') as f:
+                    f.write(svg)
+            return f'<span class="hml-figure editable-gtree">{svg}</span>\n'
+        except Exception as exc:
+            if index <= len(self.fallback_images) and self.media_dir:
+                source = self.fallback_images[index - 1]
+                ext = os.path.splitext(source)[1] or '.gif'
+                name = f'{self.media_prefix}_graph_{index:03d}_fallback{ext}'
+                target = os.path.join(self.media_dir, name)
+                shutil.copy2(source, target)
+                return (
+                    '<span class="hml-figure fallback-image">'
+                    f'<img src="media/{name}" style="max-width:100%;">'
+                    '</span>\n'
+                )
+            return f'<div class="img-placeholder">[그리기 개체 변환 실패: {html.escape(str(exc))}]</div>\n'
 
     # ── 메인 변환 루프 ────────────────────────────
 
@@ -1193,7 +1263,7 @@ class HmlConverter:
     max-width: 900px;
     margin: 0 auto;
     padding: 2em;
-    line-height: 1.8;
+    line-height: 1.5;
     color: #222;
     background: #fff;
   }}
@@ -1201,12 +1271,12 @@ class HmlConverter:
   h2 {{ font-size: 1.5em; border-bottom: 1px solid #999; padding-bottom: .2em; margin-top: 1.3em; }}
   h3 {{ font-size: 1.2em; margin-top: 1.1em; color: #444; }}
   h4, h5, h6 {{ font-size: 1.05em; margin-top: 1em; color: #555; }}
-  p  {{ margin: .5em 0 .8em; }}
+  p  {{ margin: .12em 0; }}
   table {{
     border-collapse: collapse;
     width: 100%;
-    margin: 1em auto;
-    font-size: 0.95em;
+    margin: 2em auto;
+    font-size: 10pt;
   }}
   td, th {{
     border: 1px solid #aaa;
@@ -1217,11 +1287,13 @@ class HmlConverter:
     margin: 0;
   }}
   tr:nth-child(even) td {{ background: #f9f9f9; }}
-  figure.hml-figure {{
-    margin: 1.5em auto;
+  .hml-figure {{
+    display: block;
+    margin: 0.15em auto;
     text-align: center;
     overflow-x: auto;
   }}
+  .hml-figure svg {{ margin: 0 auto !important; }}
   .img-placeholder {{
     background: #f0f0f0;
     border: 1px dashed #aaa;

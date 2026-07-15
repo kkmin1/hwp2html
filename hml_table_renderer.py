@@ -7,6 +7,10 @@ from typing import Callable
 BORDER_STYLE_MAP = {
     "Solid": "solid",
     "Dot": "dotted",
+    "Dash": "dashed",
+    "DashDot": "dashed",
+    "DashDotDot": "dashed",
+    "DoubleSlim": "double",
     "None": "none",
 }
 
@@ -32,6 +36,16 @@ def hwp_unit_to_px(value: str | None) -> float | None:
 
 def border_width_to_css(width: str | None) -> str:
     return width or "0"
+
+
+def hwp_color(value: str | None) -> str | None:
+    if not value:
+        return None
+    number = int(value)
+    red = number & 0xFF
+    green = (number >> 8) & 0xFF
+    blue = (number >> 16) & 0xFF
+    return f"#{red:02x}{green:02x}{blue:02x}"
 
 
 def table_width_px(table: ET.Element) -> float | None:
@@ -201,6 +215,20 @@ def cell_style(
             styles.append(f"vertical-align:{vert_align}")
 
     border_fill = border_fills.get(cell.get("BorderFill", ""), {})
+    fill = border_fill.get("__fill__", {})
+    if fill.get("type") == "solid":
+        color = hwp_color(fill.get("FaceColor"))
+        if color:
+            styles.append(f"background-color:{color}")
+    elif fill.get("type") == "gradient":
+        colors = [hwp_color(value) for value in fill.get("colors", [])]
+        colors = [color for color in colors if color]
+        if len(colors) >= 2:
+            angle = int(fill.get("Angle", "0"))
+            css_angle = (90 - angle) % 360
+            styles.append(
+                f"background:linear-gradient({css_angle}deg,{','.join(colors)})"
+            )
     for tag, css_side in SIDE_MAP.items():
         border = border_fill.get(tag)
         if not border:

@@ -224,7 +224,10 @@ class GTreeBuilder:
         ri = sc.find("RENDERINGINFO")
         if ri is None:
             return None
-        mat = (1.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        identity = (1.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        trans = identity
+        pairs = []
+        pending_scale = None
         for child in list(ri):
             if child.tag not in ("TRANSMATRIX", "SCAMATRIX", "ROTMATRIX"):
                 continue
@@ -236,7 +239,23 @@ class GTreeBuilder:
                 float(child.get("E5", "1")),
                 float(child.get("E6", "0")),
             )
-            mat = self.mat_mul(mat, cur)
+            if child.tag == "TRANSMATRIX":
+                trans = cur
+            elif child.tag == "SCAMATRIX":
+                pending_scale = cur
+            else:
+                pairs.append((pending_scale or identity, cur))
+                pending_scale = None
+        if pending_scale is not None:
+            pairs.append((pending_scale, identity))
+
+        # HWP5/HWPML rendering composition is trans × rot × sca for
+        # every stored (scale, rotation) pair.  XML element order alone must
+        # not be used as the multiplication order.
+        mat = trans
+        for scale, rotation in pairs:
+            mat = self.mat_mul(mat, rotation)
+            mat = self.mat_mul(mat, scale)
         return mat
 
     def apply_mat(self, mat, x: float, y: float):
@@ -535,21 +554,25 @@ class GTreeBuilder:
         stroke, sw, dash, _ = self.line_style(elem)
         center_x = float(elem.get("CenterX", "0"))
         center_y = float(elem.get("CenterY", "0"))
+        # HML ARC axis values are absolute points in the shape's local
+        # coordinate system, not vectors relative to CenterX/CenterY.
         start_local = (
-            center_x + float(elem.get("Axis1X", "0")),
-            center_y + float(elem.get("Axis1Y", "0")),
+            float(elem.get("Axis1X", "0")),
+            float(elem.get("Axis1Y", "0")),
         )
         end_local = (
-            center_x + float(elem.get("Axis2X", "0")),
-            center_y + float(elem.get("Axis2Y", "0")),
+            float(elem.get("Axis2X", "0")),
+            float(elem.get("Axis2Y", "0")),
         )
         cx, cy = self.apply_mat(mat, center_x, center_y)
         sx, sy = self.apply_mat(mat, *start_local)
         ex, ey = self.apply_mat(mat, *end_local)
-        rx = max(1.0, abs(ex - cx))
-        ry = max(1.0, abs(sy - cy))
-        start_angle = math.degrees(math.atan2(sy - cy, sx - cx))
-        end_angle = math.degrees(math.atan2(ey - cy, ex - cx))
+        # Axis1/Axis2 can be emitted in either horizontal/vertical order.
+        # Recover the transformed ellipse radii from both endpoint vectors.
+        rx = max(1.0, abs(sx - cx), abs(ex - cx))
+        ry = max(1.0, abs(sy - cy), abs(ey - cy))
+        start_angle = math.degrees(math.atan2((sy - cy) / ry, (sx - cx) / rx))
+        end_angle = math.degrees(math.atan2((ey - cy) / ry, (ex - cx) / rx))
         obj = {
             "id": self.uid(),
             "type": "arc",
@@ -565,7 +588,25 @@ class GTreeBuilder:
             "opacity": 1,
         }
         self.objects.append(obj)
-        self.update_bounds(cx - rx, cy - ry, cx + rx, cy + ry)
+        # Bound only the visible arc segment, not the complete source ellipse.
+        # Using the full ellipse creates large blank margins around quarter arcs.
+        sweep = (end_angle - start_angle) % 360.0
+
+        def on_sweep(angle):
+            return ((angle - start_angle) % 360.0) <= sweep + 1e-9
+
+        angles = [start_angle, end_angle]
+        angles.extend(a for a in (0.0, 90.0, 180.0, 270.0) if on_sweep(a))
+        points = [
+            (
+                cx + rx * math.cos(math.radians(angle)),
+                cy + ry * math.sin(math.radians(angle)),
+            )
+            for angle in angles
+        ]
+        xs = [point[0] for point in points]
+        ys = [point[1] for point in points]
+        self.update_bounds(min(xs), min(ys), max(xs), max(ys))
 
     def add_picture(self, elem: ET.Element, bbox: tuple[float, float, float, float]):
         href = self.image_data_uri(elem)
