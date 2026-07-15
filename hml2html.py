@@ -918,7 +918,13 @@ class HmlConverter:
             break
         return 'p'
 
-    def para_to_html(self, p_elem, *, allow_heading: bool = True) -> str:
+    def para_to_html(
+        self,
+        p_elem,
+        *,
+        allow_heading: bool = True,
+        preserve_empty: bool = True,
+    ) -> str:
         """P 태그 → HTML 단락"""
         tag = self._get_heading_tag(p_elem) if allow_heading else 'p'
 
@@ -926,7 +932,9 @@ class HmlConverter:
         content = self.textblock_to_html(p_elem)
 
         if not content.strip():
-            return ''  # 빈 단락 생략
+            if preserve_empty:
+                return '<div class="hml-empty" aria-hidden="true"></div>\n'
+            return ''
 
         # 한글의 표는 문단 안 개체로 저장되지만 HTML에서 <p><table>은 유효하지 않다.
         stripped = content.strip()
@@ -1100,7 +1108,13 @@ class HmlConverter:
             return ''
         parts = []
         for p in paralist_elem.findall('P'):
-            parts.append(self.para_to_html(p, allow_heading=not cell_mode))
+            parts.append(
+                self.para_to_html(
+                    p,
+                    allow_heading=not cell_mode,
+                    preserve_empty=True,
+                )
+            )
         return ''.join(parts)
 
     # ── 표 변환 ──────────────────────────────────
@@ -1271,7 +1285,8 @@ class HmlConverter:
   h2 {{ font-size: 1.5em; border-bottom: 1px solid #999; padding-bottom: .2em; margin-top: 1.3em; }}
   h3 {{ font-size: 1.2em; margin-top: 1.1em; color: #444; }}
   h4, h5, h6 {{ font-size: 1.05em; margin-top: 1em; color: #555; }}
-  p  {{ margin: .12em 0; }}
+  p  {{ margin: 0; }}
+  .hml-empty {{ height: 1.5em; line-height: 1.5em; }}
   table {{
     border-collapse: collapse;
     width: 100%;
